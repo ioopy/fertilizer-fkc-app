@@ -144,7 +144,8 @@ def get_line_comparision(data, title):
     fig.update_layout(
         title_text=title,
         width=800,
-        height=700
+        height=700,
+        showlegend=False,
         # legend=dict(
         #     orientation="h",        # Set the legend orientation to horizontal
         #     yanchor="bottom",       # Anchor the legend at the bottom
