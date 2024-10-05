@@ -2,7 +2,7 @@ import streamlit as st
 from utils.func import break_page, get_color_map, get_head_title, section_title
 from utils.load_data import get_data
 import plotly.express as px
-import pandas as pd
+from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 # Default page header.
@@ -92,111 +92,67 @@ def get_bar_plot_group(data, title):
     st.plotly_chart(fig, theme="streamlit")
 
 def get_line_comparision(data, title):
-    fig = go.Figure()
+    fig = make_subplots(rows=2, cols=2, 
+                        shared_yaxes=False,  # Share the y-axis (province)
+                        subplot_titles=["จำนวนขาย (ชิ้น)", "ราคาขาย", "% ส่วนลด", "คะแนน"],  # Titles for the subplots
+                        horizontal_spacing=0.12, 
+                        ) 
 
     fig.add_trace(go.Scatter(
         x=data['total_value'],
         y=data['amount_sold_format'],
-        name="ยอดขาย ชิ้น",
         line=dict(color='#1f77b4',width=2),
         line_shape='linear'
-    ))
+    ),
+    row=1, col=1 )
 
 
     fig.add_trace(go.Scatter(
         x=data['total_value'],
         y=data['discount_price_format'],
-        name="ราคาขาย",
-        yaxis="y2",
         line=dict(color='#ff7f0e',width=2),
         line_shape='linear'
-    ))
+    ),
+    row=1, col=2 )
 
     fig.add_trace(go.Scatter(
         x=data['total_value'],
         y=data['per_discount_format'],
-        name="% ส่วนลด",
-        yaxis="y3",
         line=dict(color='#d62728',width=2, dash='dot'),
         line_shape='linear'
-    ))
+    ),
+    row=2, col=1 )
 
     fig.add_trace(go.Scatter(
         x=data['total_value'],
         y=data['star_review'],
-        name="คะแนน",
-        yaxis="y4",
         line=dict(color='#9467bd',width=2, dash='dot'),
         line_shape='linear'
-    ))
+    ),
+    row=2, col=2 )
 
+    fig.update_xaxes(title_text="ยอดขาย", row=1, col=1)
+    fig.update_xaxes(title_text="ยอดขาย", row=1, col=2)
+    fig.update_xaxes(title_text="ยอดขาย", row=2, col=1)
+    fig.update_xaxes(title_text="ยอดขาย", row=2, col=2)
 
-    # Create axis objects
-    fig.update_layout(
-        xaxis=dict(
-            domain=[0.13, 0.9]
-        ),
-        yaxis=dict(
-            title="ราคาขาย",
-            titlefont=dict(
-                color="#1f77b4"
-            ),
-            tickfont=dict(
-                color="#1f77b4"
-            )
-        ),
-        yaxis2=dict(
-            title="ราคาขาย",
-            titlefont=dict(
-                color="#ff7f0e"
-            ),
-            tickfont=dict(
-                color="#ff7f0e"
-            ),
-            anchor="free",
-            overlaying="y",
-            side="left",
-            position=0.01
-        ),
-        yaxis3=dict(
-            title="% ส่วนลด",
-            titlefont=dict(
-                color="#d62728"
-            ),
-            tickfont=dict(
-                color="#d62728"
-            ),
-            anchor="x",
-            overlaying="y",
-            side="right"
-        ),
-        yaxis4=dict(
-            title="คะแนน",
-            titlefont=dict(
-                color="#9467bd"
-            ),
-            tickfont=dict(
-                color="#9467bd"
-            ),
-            anchor="free",
-            overlaying="y",
-            side="right",
-            position=1
-        )
-    )
-
+    fig.update_yaxes(title_text="จำนวนขาย (ชิ้น)", row=1, col=1)
+    fig.update_yaxes(title_text="ราคาขาย", row=1, col=2)
+    fig.update_yaxes(title_text="% ส่วนลด", row=2, col=1)
+    fig.update_yaxes(title_text="คะแนน", row=2, col=2)
     # Update layout properties
     fig.update_layout(
         title_text=title,
         width=800,
-        legend=dict(
-            orientation="h",        # Set the legend orientation to horizontal
-            yanchor="bottom",       # Anchor the legend at the bottom
-            y=1,                    # Position the legend above the graph
-            xanchor="center",       # Center the legend horizontally
-            x=0.5                   # Set the legend to the center of the x-axis
-        ),
-        legend_title_text=''
+        height=700
+        # legend=dict(
+        #     orientation="h",        # Set the legend orientation to horizontal
+        #     yanchor="bottom",       # Anchor the legend at the bottom
+        #     y=1,                    # Position the legend above the graph
+        #     xanchor="center",       # Center the legend horizontally
+        #     x=0.5                   # Set the legend to the center of the x-axis
+        # ),
+        # legend_title_text=''
     )
 
     st.plotly_chart(fig, theme="streamlit")
