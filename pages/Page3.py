@@ -1,6 +1,6 @@
 import streamlit as st
 from menu import menu_with_redirect
-from utils.func import break_page, get_head_title, hide_header_icons, section_title
+from utils.func import break_page, get_color_map, get_head_title, hide_header_icons, section_title
 import plotly.express as px
 from utils.load_data import get_data
 from plotly.subplots import make_subplots
@@ -50,12 +50,52 @@ def get_line_plot(data):
     st.plotly_chart(fig, theme="streamlit")
     return None
 
+def get_scatter_plot(data):
+    # mean_discount_price = data['discount_price_format'].mean()
+    fig = px.scatter(data, x='per_discount_format', y='total_value',marginal_x="histogram", marginal_y="violin",
+                color='marketplace',
+                size='amount_sold_format', size_max=60,
+                hover_name="marketplace", color_discrete_map=get_color_map(),
+                labels={'amount_sold_format': 'ยอดขาย (ชิ้น)', 'per_discount_format': '% ส่วนลด', 'total_value': 'ยอดขาย (฿)'},
+            )
+    fig.update_layout(
+        title={
+            'text': '',
+            'x': 0.5,  # Center the title
+            'xanchor': 'center',  # Ensure it's anchored in the center
+            'yanchor': 'top'  # Keep it at the top
+        },
+        yaxis_title="ยอดขาย (฿)",
+        xaxis_title="% ส่วนลด",
+        xaxis_tickfont_size=16,
+        yaxis_tickfont_size=16,
+        font=dict(
+            size=18,
+        ),
+        legend=dict(
+            orientation="h",        # Set the legend orientation to horizontal
+            yanchor="bottom",       # Anchor the legend at the bottom
+            y=1,                    # Position the legend above the graph
+            xanchor="center",       # Center the legend horizontally
+            x=0.5                   # Set the legend to the center of the x-axis
+        ),
+        margin=dict(
+            t=100  # Add space at the top (increase this value as needed)
+        ),
+        legend_title_text='',
+        height=800
+    )
+    st.plotly_chart(fig, theme="streamlit")
+    return None
 
 # Section 1
 section_title("เปอร์เซ็นต์การลดราคามีความสัมพันธ์กับยอดขายของสินค้านี้อย่างไร")
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
 display = data_all.sort_values('per_discount_format', ascending=False)
+display = display[['marketplace', 'per_discount_format', 'amount_sold_format', 'total_value']]
 st.dataframe(display, hide_index=True)
+get_scatter_plot(display)
+
 st.divider()
 break_page()
 
@@ -65,5 +105,7 @@ data_all = data_all[data_all['per_discount_format'] > 30]
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
 display = display[display['per_discount_format'] > 30]
 st.dataframe(display, hide_index=True)
+display = display[display['per_discount_format'] > 30]
+get_scatter_plot(display)
 
 
