@@ -15,7 +15,7 @@ data_all = data_all[['marketplace', 'star_review', 'original_price', 'discount_p
 data_all = data_all[data_all['amount_sold_format'] > 0]
 
 def get_scatter_plot(data):
-    mean_discount_price = data['discount_price_format'].mean()
+    mean_star_review = data['star_review'].mean()
     fig = px.scatter(data, x='star_review', y='discount_price_format',
                 # color='product_nm',
                 # symbol='product_nm',
@@ -24,12 +24,12 @@ def get_scatter_plot(data):
                 # labels={'product_nm': 'สินค้า', 'original_price': 'ราคา', 'star_review': 'คะแนน', 'total_sale': 'sale value', 'province': 'จังหวัด', 'amount_sold_format': 'ยอดขาย'},
             )
     fig.add_shape(type="line",
-                x0=0, x1=5,
-                y0=mean_discount_price, y1=mean_discount_price,
+                x0=mean_star_review, x1=mean_star_review,
+                y0=0, y1=max(data['discount_price_format']) + 1000,
                 line=dict(color="Red", width=2, dash="dash"),
                 name="Mean Price")
-    fig.add_annotation(x=data_sorted['star_review'].min(), y=mean_discount_price,
-                    text=f"ราคาเฉลี่ย: {mean_discount_price:.2f}",
+    fig.add_annotation(x=mean_star_review, y=max(data['discount_price_format'])  + 1000,
+                    text=f"คะแนนรีวิวเฉลี่ย: {mean_star_review:.2f}",
                     showarrow=False, 
                     yshift=10,  # Shift the annotation up slightly
                     font=dict(color="Red", size=12))
