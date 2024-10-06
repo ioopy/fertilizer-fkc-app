@@ -62,7 +62,8 @@ def plot_sun_burst(data):
 
 st.title("MFU - เก็บข้อมูลผู้บริโภคข้าว")
 st.write("")
-
+data_all = get_data()
+st.dataframe(data_all, hide_index=True)
 # data_all = get_data()
 # desc_msg = '''
 #     - **Shopee** เก็บข้อมูล ณ วันที่ 19/09/2567
