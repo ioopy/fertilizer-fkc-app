@@ -67,7 +67,8 @@ def get_bar_plot(data, title, mean_star_review):
 
 def get_scatter_plot(data):
     mean_original_price = data['original_price'].mean()
-    fig = px.scatter(data, x='star_review', y='original_price'
+    fig = px.scatter(data, x='star_review', y='original_price',
+                    labels={'star_review': 'คะแนนรีวิว', 'original_price': 'ราคาก่อนลด', 'total_value': 'ยอดขาย (฿)'},
                 # symbol='product_nm',
                 # trendline='ols'
             )
@@ -117,6 +118,18 @@ def get_scatter_plot(data):
     st.plotly_chart(fig, theme="streamlit")
     return None
 
+desc_msg1 = '''
+    **สินค้าที่มียอดรีวิวสูงกว่าค่าเฉลี่ยในแต่ละแพลตฟอร์ม ได้แก่:**
+'''
+desc_msg2 = '''
+    จากการวิเคราะห์พบว่า:\n
+    - สินค้าที่มีราคาสูงกว่าค่าเฉลี่ยมีคะแนนรีวิวเฉลี่ยอยู่ที่ **3.68 ดาว**
+    - สินค้าที่มีราคาต่ำกว่าค่าเฉลี่ยมีคะแนนรีวิวเฉลี่ยอยู่ที่ **4.27 ดาว**
+'''
+summary2 = '''
+    ดังนั้น สินค้าที่มีราคาสูงกว่าค่าเฉลี่ยมีแนวโน้มได้รับรีวิวต่ำกว่าสินค้าที่มีราคาต่ำกว่าค่าเฉลี่ยอย่างชัดเจน
+'''
+
 # Section 1
 section_title("สินค้าที่มียอดรีวิวเฉลี่ยสูงที่สุดในแต่ละแพลตฟอร์มคืออะไร")
 mean_star_review = data_all['star_review'].mean()
@@ -127,15 +140,16 @@ display = display[['marketplace', 'product_name', 'star_review']]
 display = display.sort_values('star_review', ascending=False)
 display.rename(columns={'product_name': 'สินค้า', 'star_review': 'คะแนนรีวิว'}, inplace=True)
 
+st.markdown(desc_msg1)
 st.write("**Shopee**")
 display_shopee = display[display['marketplace'] == 'shopee']
 st.dataframe(display_shopee, hide_index=True)
-
+break_page()
 st.write("**Lazada**")
 display_lazada = display[display['marketplace'] == 'lazada']
 st.dataframe(display_lazada, hide_index=True)
 # get_bar_plot(grouped_df, "", mean_star_review)
-
+break_page()
 st.divider()
 # Section 2
 section_title("สินค้าราคาสูงกว่าค่าเฉลี่ยมีแนวโน้มได้รับรีวิวต่ำกว่าสินค้าราคาต่ำกว่าค่าเฉลี่ยหรือไม่")
@@ -143,3 +157,5 @@ display = grouped_df.sort_values('star_review', ascending=False)
 # st.dataframe(display, hide_index=True)
 # st.write(data_all)
 get_scatter_plot(data_all)
+st.markdown(desc_msg2)
+st.markdown(summary2)

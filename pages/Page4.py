@@ -21,7 +21,7 @@ def get_scatter_plot(data):
                 # symbol='product_nm',
                 # trendline='ols'
                 # hover_name="product_nm",
-                # labels={'product_nm': 'สินค้า', 'original_price': 'ราคา', 'star_review': 'คะแนน', 'total_sale': 'sale value', 'province': 'จังหวัด', 'amount_sold_format': 'ยอดขาย'},
+                labels={'discount_price_format': 'ราคาขาย', 'original_price': 'ราคา', 'star_review': 'คะแนน', },
             )
     fig.add_shape(type="line",
                 x0=mean_star_review, x1=mean_star_review,
@@ -80,7 +80,8 @@ def plot_scatter_map(data, size_col, title=""):
                             hover_name="province",  # Column that will appear on hover
                             hover_data={"latitude": False, "longitude": False, "marketplace": True},
                             zoom=4.2,  # Adjust zoom level
-                            size_max=50)
+                            size_max=50,
+                            labels={'total_value': 'ยอดขาย (฿)', 'amount_sold_format': 'ยอดขาย (ชิ้น)'},)
 
     # Customize the map appearance
     fig.update_layout(mapbox_style="open-street-map",
@@ -106,11 +107,33 @@ def plot_scatter_map(data, size_col, title=""):
 
     st.plotly_chart(fig, theme="streamlit")
 
+desc_msg1 = '''
+    จากการวิเคราะห์พบว่า:\n
+    - สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยได้รับคะแนนรีวิวเฉลี่ยอยู่ที่ **4.28 ดาว**
+    - สินค้าที่มีราคาหลังหักส่วนลดสูงกว่าค่าเฉลี่ยได้รับคะแนนรีวิวเฉลี่ยอยู่ที่ **3.71 ดาว**
+'''
+summary1 = '''
+    ดังนั้น สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยมีแนวโน้มที่จะได้รับรีวิวดีขึ้น
+'''
+
+desc_msg2 = '''
+    จากการวิเคราะห์พบว่า:\n
+    1. **กรุงเทพมหานคร** มียอดขายรวมสูงสุดที่ 16,258,127.45 บาท
+    2. **สมุทรปราการ** มียอดขายรวม 12,745,174.50 บาท
+    3. **ชัยนาท** มียอดขายรวม 7,230,830.48 บาท
+    4. **เชียงใหม่** มียอดขายรวม 6,688,232.20 บาท
+    5. **นนทบุรี** มียอดขายรวม 6,618,633.30 บาท
+'''
+summary2 = '''
+    ข้อมูลเหล่านี้แสดงถึงพื้นที่ที่ลูกค้ามีแนวโน้มใช้จ่ายมากที่สุดในสินค้าที่มีราคาสูงหลังหักส่วนลด
+'''
+
 # Section 1
 section_title("สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยได้รับรีวิวดีขึ้นหรือไม่") #discount_price, star_review
 data_sorted = data_all.sort_values(by='discount_price_format', ascending=False)
-
 get_scatter_plot(data_sorted)
+st.markdown(desc_msg1)
+st.markdown(summary1)
 
 st.divider()
 break_page()
@@ -130,4 +153,6 @@ with col1:
 with col2:
     plot_scatter_map(discount_stats, 'total_value', "ยอดขาย")
 
+st.markdown(desc_msg2)
+st.markdown(summary2)
 break_page()

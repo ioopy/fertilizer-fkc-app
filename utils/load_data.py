@@ -21,7 +21,7 @@ def format_sales_data(data):
     data['per_discount_format'].fillna(0, inplace=True)
     data['original_price'] = data['original_price'].mask((data['original_price'].isna()) | (data['original_price'] == 0), data['discount_price_format'])
     data['province'] = data['province'].str.replace('China', 'ต่างประเทศ').str.replace('Loei', 'เลย').str.replace('Bangkok', 'กรุงเทพมหานคร').str.replace('Phrae', 'แพร่').str.replace('Surin', 'สุรินทร์')
-    data['province'] = data['province'].str.replace('จังหวัด', '')
+    data['province'] = data['province'].str.replace('จังหวัด', '').str.replace('กรุงเทพฯ', 'กรุงเทพมหานคร')
     data = pd.merge(data, get_lat_lon(), how='left', on='province')
     
     return data

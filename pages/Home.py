@@ -60,10 +60,8 @@ def plot_sun_burst(data):
     )
     st.plotly_chart(fig, theme="streamlit")
 
-st.title("MFU - เก็บข้อมูลผู้บริโภคข้าว")
+st.title("รายงานการวิเคราะห์ ปุ๋ย")
 st.write("")
-data_all = get_data()
-st.dataframe(data_all, hide_index=True)
 # data_all = get_data()
 # desc_msg = '''
 #     - **Shopee** เก็บข้อมูล ณ วันที่ 19/09/2567

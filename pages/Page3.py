@@ -88,13 +88,35 @@ def get_scatter_plot(data):
     st.plotly_chart(fig, theme="streamlit")
     return None
 
+desc_msg1 = '''
+    จากการวิเคราะห์พบว่า:\n
+    - ความสัมพันธ์ระหว่างเปอร์เซ็นต์การลดราคาและยอดขายรวม (**total_value**) มีค่าสหสัมพันธ์ประมาณ -0.033 ซึ่งบ่งชี้ว่าความสัมพันธ์มีน้อยมากและแทบจะไม่มีผลต่อกัน
+    - ความสัมพันธ์ระหว่างเปอร์เซ็นต์การลดราคาและจำนวนสินค้าที่ขายได้ มีค่าสหสัมพันธ์ประมาณ -0.005 ซึ่งแสดงให้เห็นว่าทั้งสองตัวแปรนี้แทบไม่มีความสัมพันธ์กันเลย
+
+'''
+summary1 = '''
+    ดังนั้นเปอร์เซ็นต์การลดราคาไม่ได้ส่งผลชัดเจนต่อยอดขายหรือจำนวนสินค้าที่ขายได้
+'''
+
+desc_msg2 = '''
+    จากการวิเคราะห์พบว่า:\n
+    - สินค้าที่ลดราคามากกว่า 30% มียอดขายเฉลี่ยอยู่ที่ **34,888.64 บาท**
+    - สินค้าที่ลดราคา 30% หรือน้อยกว่านั้นมียอดขายเฉลี่ยสูงกว่าคือ **44,638.58 บาท**
+'''
+summary2 = '''
+    ดังนั้น การลดราคามากกว่า 30% ไม่ได้มีผลทำให้ยอดขายเพิ่มขึ้น ในทางกลับกัน สินค้าที่ลดราคาน้อยกว่ามีแนวโน้มมียอดขายเฉลี่ยสูงกว่า
+'''
+
 # Section 1
 section_title("เปอร์เซ็นต์การลดราคามีความสัมพันธ์กับยอดขายของสินค้านี้อย่างไร")
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
 display = data_all.sort_values('per_discount_format', ascending=False)
 display = display[['marketplace', 'per_discount_format', 'amount_sold_format', 'total_value']]
-st.dataframe(display, hide_index=True)
+# st.dataframe(display, hide_index=True)
 get_scatter_plot(display)
+break_page()
+st.markdown(desc_msg1)
+st.markdown(summary1)
 
 st.divider()
 break_page()
@@ -104,8 +126,10 @@ section_title("การลดราคามากกว่า 30% มีผล
 data_all = data_all[data_all['per_discount_format'] > 30]
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
 display = display[display['per_discount_format'] > 30]
-st.dataframe(display, hide_index=True)
+# st.dataframe(display, hide_index=True)
 display = display[display['per_discount_format'] > 30]
 get_scatter_plot(display)
+st.markdown(desc_msg2)
+st.markdown(summary2)
 
 
