@@ -52,7 +52,7 @@ def get_line_plot(data):
 
 def get_scatter_plot(data):
     # mean_discount_price = data['discount_price_format'].mean()
-    fig = px.scatter(data, x='per_discount_format', y='total_value',marginal_x="histogram", marginal_y="violin",
+    fig = px.scatter(data, x='per_discount_format', y='total_value', marginal_y="violin",
                 color='marketplace',
                 size='amount_sold_format', size_max=60,
                 hover_name="marketplace", color_discrete_map=get_color_map(),
@@ -83,14 +83,14 @@ def get_scatter_plot(data):
             t=100  # Add space at the top (increase this value as needed)
         ),
         legend_title_text='',
-        height=800
+        height=600
     )
     st.plotly_chart(fig, theme="streamlit")
     return None
 
 desc_msg1 = '''
     จากการวิเคราะห์พบว่า:\n
-    - ความสัมพันธ์ระหว่างเปอร์เซ็นต์การลดราคาและยอดขายรวม (**total_value**) มีค่าสหสัมพันธ์ประมาณ -0.033 ซึ่งบ่งชี้ว่าความสัมพันธ์มีน้อยมากและแทบจะไม่มีผลต่อกัน
+    - ความสัมพันธ์ระหว่างเปอร์เซ็นต์การลดราคาและยอดขายรวม มีค่าสหสัมพันธ์ประมาณ -0.033 ซึ่งบ่งชี้ว่าความสัมพันธ์มีน้อยมากและแทบจะไม่มีผลต่อกัน
     - ความสัมพันธ์ระหว่างเปอร์เซ็นต์การลดราคาและจำนวนสินค้าที่ขายได้ มีค่าสหสัมพันธ์ประมาณ -0.005 ซึ่งแสดงให้เห็นว่าทั้งสองตัวแปรนี้แทบไม่มีความสัมพันธ์กันเลย
 
 '''
@@ -112,7 +112,13 @@ section_title("เปอร์เซ็นต์การลดราคาม�
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
 display = data_all.sort_values('per_discount_format', ascending=False)
 display = display[['marketplace', 'per_discount_format', 'amount_sold_format', 'total_value']]
-# st.dataframe(display, hide_index=True)
+display2 = display.groupby('marketplace').agg(
+    total_value_sum=('total_value', 'sum'),
+    total_value_mean=('total_value', 'mean')
+).reset_index()
+display2['total_value_mean'] = display2['total_value_mean'].apply(lambda x: f"{x:,.2f}")
+display2.rename(columns={'total_value_sum': 'ยอดขายรวม', 'total_value_mean': 'ยอดขายเฉลี่ย'}, inplace=True)
+st.dataframe(display2, hide_index=True)
 get_scatter_plot(display)
 break_page()
 st.markdown(desc_msg1)
@@ -126,7 +132,13 @@ section_title("การลดราคามากกว่า 30% มีผล
 data_all = data_all[data_all['per_discount_format'] > 30]
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
 display = display[display['per_discount_format'] > 30]
-# st.dataframe(display, hide_index=True)
+display2 = display.groupby('marketplace').agg(
+    total_value_sum=('total_value', 'sum'),
+    total_value_mean=('total_value', 'mean')
+).reset_index()
+display2['total_value_mean'] = display2['total_value_mean'].apply(lambda x: f"{x:,.2f}")
+display2.rename(columns={'total_value_sum': 'ยอดขายรวม', 'total_value_mean': 'ยอดขายเฉลี่ย'}, inplace=True)
+st.dataframe(display2, hide_index=True)
 display = display[display['per_discount_format'] > 30]
 get_scatter_plot(display)
 st.markdown(desc_msg2)
