@@ -60,7 +60,7 @@ def plot_sun_burst(data):
     )
     st.plotly_chart(fig, theme="streamlit")
 
-st.title("รายงานการวิเคราะห์ ปุ๋ย")
+st.title("รายงานการวิเคราะห์ ปุ๋ยน้ำ")
 st.write("")
 # data_all = get_data()
 # desc_msg = '''
@@ -68,13 +68,13 @@ st.write("")
 #     - **Lazada** เก็บข้อมูล ณ วันที่ 24/09/2567
 # '''
 # st.markdown(desc_msg)
-# with open("data/rice-mfu.pdf", "rb") as pdf_file:
-#     PDFbyte = pdf_file.read()
+with open("data/Liquid fertilizer analysis report.pdf", "rb") as pdf_file:
+    PDFbyte = pdf_file.read()
 
-# st.download_button(label="📄 Export Report",
-#                     data=PDFbyte,
-#                     file_name="rice-online-market.pdf",
-#                     mime='application/octet-stream')
+st.download_button(label="📄 Export Report",
+                    data=PDFbyte,
+                    file_name="Liquid fertilizer analysis report.pdf",
+                    mime='application/octet-stream')
 
 # grouped_data = data_all[['marketplace', 'product_nm']]
 # grouped_data = grouped_data.groupby(['marketplace', 'product_nm']).size().reset_index(name='count')

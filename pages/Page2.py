@@ -149,8 +149,9 @@ st.write("**Lazada**")
 display_lazada = display[display['marketplace'] == 'lazada']
 st.dataframe(display_lazada, hide_index=True)
 # get_bar_plot(grouped_df, "", mean_star_review)
-break_page()
+
 st.divider()
+break_page()
 # Section 2
 section_title("สินค้าราคาสูงกว่าค่าเฉลี่ยมีแนวโน้มได้รับรีวิวต่ำกว่าสินค้าราคาต่ำกว่าค่าเฉลี่ยหรือไม่")
 display = grouped_df.sort_values('star_review', ascending=False)
