@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 get_head_title(1, "เพื่อศึกษาแบรนด์ที่ยอดขายสูง")
 # Get data & Filter data
 data_all = get_data()
-data_all = data_all[['marketplace', 'product_name', 'amount_sold_format', 'discount_price_format', 'total_value', 'per_discount_format', 'itemId', 'shopId', 'star_review']]
+data_all = data_all[['marketplace', 'product_name', 'amount_sold_format', 'discount_price_format', 'total_value', 'per_discount_format', 'itemId', 'shopId', 'star_review', 'store']]
 data_all = data_all[data_all['amount_sold_format'] > 0]
 
 def get_bar_plot(data, title):
@@ -189,6 +189,15 @@ display = data_all.groupby('marketplace').agg(
 display['total_value_mean'] = display['total_value_mean'].apply(lambda x: f"{x:,.2f}")
 display.rename(columns={'total_value_sum': 'ยอดขายรวม', 'total_value_mean': 'ยอดขายเฉลี่ย'}, inplace=True)
 st.dataframe(display, hide_index=True)
+
+# Add show store
+lazada = data_all[data_all['marketplace'] == 'lazada']
+display2 = lazada[['marketplace', 'store', 'total_value']]
+display2 = display2.sort_values('total_value', ascending=False)
+display2['total_value'] = display2['total_value'].apply(lambda x: f"{x:,.2f}")
+display2.rename(columns={'store': 'ชื่อร้านค้า','total_value': 'ยอดขายรวม'}, inplace=True)
+st.dataframe(display2, hide_index=True)
+break_page()
 get_bar_plot(grouped_df, "")
 st.markdown(desc_msg1)
 st.markdown(summary1)

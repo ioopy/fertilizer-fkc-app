@@ -68,7 +68,7 @@ st.write("")
 #     - **Lazada** เก็บข้อมูล ณ วันที่ 24/09/2567
 # '''
 # st.markdown(desc_msg)
-with open("data/Liquid fertilizer analysis report.pdf", "rb") as pdf_file:
+with open("data/Liquid fertilizer analysis report-v2.pdf", "rb") as pdf_file:
     PDFbyte = pdf_file.read()
 
 st.download_button(label="📄 Export Report",
